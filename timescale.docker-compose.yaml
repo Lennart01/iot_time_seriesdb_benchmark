@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter
+    ports:
+      - 9187:9187
+    environment:
+      DATA_SOURCE_NAME: "postgres://monitoring:password@timescaledb:5432/postgres?sslmode=disable"
+  timescaledb:
+    image: timescale/timescaledb-ha:pg15-latest
+    container_name: timescaledb
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: myuser
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+
+volumes:
+  timescaledb_data:
